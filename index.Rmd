@@ -1,0 +1,314 @@
+---
+title: "CNP Partners: Pago por tarjeta"
+author: "Victorien Melot"
+date: "24/05/2019"
+output: rmdformats::material
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message= FALSE)
+```
+
+
+```{r echo=FALSE}
+#Ancien code !! 
+#library(epuRate)
+library(markdown)
+library(ggplot2)
+library(dplyr)
+library(readr)
+library(plotly)
+library(devtools)
+library(rmdformats)
+# La fonction qui permet de calculer le prix
+fun1 = function(prix, nbrmax){
+  
+  # CAIXA 
+   
+  x1=c(0,5,10,20,30,40,50,60,70,80,90,100)
+  x2=c()
+  y1=c(0,0,0,0,0,0,0,0,0,0,0,0)
+  tasaCaiXa= 0.003
+  minimoCaixa=0.06
+  tr1Caixa=600
+  tr1CaixaPrix=19
+  tr2CaixaPrix=9
+  trQuanti=  tr1Caixa%/%prix
+  if( is.element(trQuanti,x1)==FALSE){
+    x2=c(x1,trQuanti,trQuanti)
+    y1=c(y1,0,0)
+  }
+  else{ 
+    x2=c(x1,trQuanti)
+    y1=c(y1,0)
+  }
+  x3 =sort(x2)
+  for ( i in 1:length(x2)){
+    if (x3[i]<=trQuanti){
+      if (prix*tasaCaiXa<minimoCaixa){
+        y1[i]=x3[i]*minimoCaixa*prix+tr1CaixaPrix
+      }
+      else {
+        y1[i]=x3[i]*tasaCaiXa*prix+tr1CaixaPrix
+        }
+    }
+    else{
+      if (prix*tasaCaiXa<minimoCaixa){
+        y1[i]=x3[i]*minimoCaixa*prix+tr2CaixaPrix
+      }
+    
+      else {y1[i]=x3[i]*tasaCaiXa*prix+tr2CaixaPrix}
+    }
+  }
+  for ( i in 1:(length(x3)-1)){
+    if(x3[i]==x3[i+1]){
+      y1[i+1]=x3[i+1]*tasaCaiXa*prix+tr2CaixaPrix
+    }
+  }
+  # premier plot
+  p<-plot_ly(y=y1, x=x3,type="scatter", mode="markers+lines", name="Caixa")
+  
+  
+  #CAJA RURAL
+  xR1=c(0,5,10,20,30,40,50,60,70,80,90,100)
+  xR2=c()
+  yR=c(0,0,0,0,0,0,0,0,0,0,0,0)
+  tasaRural= 0.0032
+  minimoRural=0.35
+  tr1Rural=1500
+  tr1RuralPrix=15
+  tr2RuralPrix=0
+  trQuantiR=  tr1Rural%/%prix
+  if( is.element(trQuantiR,xR1)==FALSE){
+    xR2=c(xR1,trQuantiR,trQuantiR)
+    yR=c(yR,0,0)
+  }
+  else{ 
+    xR2=c(xR1,trQuantiR)
+    yR=c(yR,0)
+  }
+  print("pas trié xR2")
+  print(xR2)
+  print("trie xR2")
+  xR3 =sort(xR2)
+  print(xR3)
+
+  for ( i in 1:length(xR2)){
+    if (xR3[i]<=trQuantiR){
+      if (prix*tasaRural<minimoRural){
+        yR[i]=xR3[i]*minimoRural+tr1RuralPrix
+      }
+      else {
+        yR[i]=xR3[i]*tasaRural*prix+tr1RuralPrix
+        }
+    }
+    else{
+      if (prix*tasaRural<minimoRural){
+        yR[i]=xR3[i]*minimoRural+tr2RuralPrix
+      }
+      else {yR[i]=xR3[i]*tasaRural*prix+tr2RuralPrix}
+    }
+  }
+  for ( i in 1:(length(xR3)-1)){
+    if(xR3[i]==xR3[i+1]){
+      if (prix*tasaRural<minimoRural){
+        yR[i+1]=xR3[i+1]*minimoRural+tr2RuralPrix
+      }
+      else {yR[i+1]=xR3[i+1]*tasaRural*prix+tr2RuralPrix}
+    }
+    }
+  p<-add_trace(p, y=yR, x=xR3 , type="scatter", mode="markers+lines", name="Caja Rural" )
+  
+  
+  #BBVA
+  xBB1=c(0,5,10,20,30,40,50,60,70,80,90,100)
+  yBB=c(0,0,0,0,0,0,0,0,0,0,0,0)
+  tasaBBVA= 0.013
+  tr1BBVA=0
+  tr1BBVAPrix=0
+  for ( i in 1:length(xBB1)){
+    yBB[i]=xBB1[i]*tasaBBVA*prix+tr1BBVAPrix
+  }
+   p<-add_trace(p, y=yBB, x=xBB1 , type="scatter", mode="markers+lines", name="BBVA" )
+  
+  p
+  }
+
+```
+
+
+
+### Los diferentes gastos en foncion de los precios de los productos.
+```{r echo=FALSE}
+# importation des librairies
+library(plotly)
+library(hrbrthemes)
+# La fonction qui permet de calculer le prix
+fun1 = function(prix){
+  
+  # CAIXA 
+   
+  x1=c(0,5,10,20,30,40,50,60,70,80,90,100)
+  x2=c()
+  y1=c(0,0,0,0,0,0,0,0,0,0,0,0)
+  tasaCaiXa= 0.003
+  minimoCaixa=0.06
+  tr1Caixa=600
+  tr1CaixaPrix=19
+  tr2CaixaPrix=9
+  trQuanti=  tr1Caixa%/%prix
+  if( is.element(trQuanti,x1)==FALSE){
+    x2=c(x1,trQuanti,trQuanti)
+    y1=c(y1,0,0)
+  }
+  else{ 
+    x2=c(x1,trQuanti)
+    y1=c(y1,0)
+  }
+  x3 =sort(x2)
+  for ( i in 1:length(x2)){
+    if (x3[i]<=trQuanti){
+      if (prix*tasaCaiXa<minimoCaixa){
+        y1[i]=x3[i]*minimoCaixa*prix+tr1CaixaPrix
+      }
+      else {
+        y1[i]=x3[i]*tasaCaiXa*prix+tr1CaixaPrix
+        }
+    }
+    else{
+      if (prix*tasaCaiXa<minimoCaixa){
+        y1[i]=x3[i]*minimoCaixa*prix+tr2CaixaPrix
+      }
+    
+      else {y1[i]=x3[i]*tasaCaiXa*prix+tr2CaixaPrix}
+    }
+  }
+  for ( i in 1:(length(x3)-1)){
+    if(x3[i]==x3[i+1]){
+      y1[i+1]=x3[i+1]*tasaCaiXa*prix+tr2CaixaPrix
+    }
+  }
+  
+  
+  
+  #CAJA RURAL
+  xR1=c(0,5,10,20,30,40,50,60,70,80,90,100)
+  xR2=c()
+  yR=c(0,0,0,0,0,0,0,0,0,0,0,0)
+  tasaRural= 0.0032
+  minimoRural=0.35
+  tr1Rural=1500
+  tr1RuralPrix=15
+  tr2RuralPrix=0
+  trQuantiR=  tr1Rural%/%prix
+  if( is.element(trQuantiR,xR1)==FALSE){
+    xR2=c(xR1,trQuantiR,trQuantiR)
+    yR=c(yR,0,0)
+  }
+  else{ 
+    xR2=c(xR1,trQuantiR)
+    yR=c(yR,0)
+  }
+  
+  xR3 =sort(xR2)
+  
+  for ( i in 1:length(xR2)){
+    if (xR3[i]<=trQuantiR){
+      if (prix*tasaRural<minimoRural){
+        yR[i]=xR3[i]*minimoRural+tr1RuralPrix
+      }
+      else {
+        yR[i]=xR3[i]*tasaRural*prix+tr1RuralPrix
+        }
+    }
+    else{
+      if (prix*tasaRural<minimoRural){
+        yR[i]=xR3[i]*minimoRural+tr2RuralPrix
+      }
+      else {yR[i]=xR3[i]*tasaRural*prix+tr2RuralPrix}
+    }
+  }
+  for ( i in 1:(length(xR3)-1)){
+    if(xR3[i]==xR3[i+1]){
+      if (prix*tasaRural<minimoRural){
+        yR[i+1]=xR3[i+1]*minimoRural+tr2RuralPrix
+      }
+      else {yR[i+1]=xR3[i+1]*tasaRural*prix+tr2RuralPrix}
+    }
+    }
+
+  
+  
+  #BBVA
+  xBB1=c(0,5,10,20,30,40,50,60,70,80,90,100)
+  yBB=c(0,0,0,0,0,0,0,0,0,0,0,0)
+  tasaBBVA= 0.013
+  tr1BBVA=0
+  tr1BBVAPrix=0
+  for ( i in 1:length(xBB1)){
+    yBB[i]=xBB1[i]*tasaBBVA*prix+tr1BBVAPrix
+  }
+
+  # Permet de faire la 3 eme variable avec les noms des banques
+  zBB=c()
+  zc=c()
+  zR=c()
+  for ( i in 1:length(x2)){zc=c(zc,"Caixa")}
+  for ( i in 1:length(xBB1)){zBB=c(zBB,"BBVA")}
+  for ( i in 1:length(xR2)){zR=c(zR,"Caja Rural")}
+   
+# création de la data.frame
+  dataCaixa <- data.frame("Numero"=c(x3,xR3,xBB1),"Gastos"=c(y1,yR,yBB), "Banco"=c(zc,zR,zBB))
+  
+  p <- dataCaixa %>%
+    ggplot(aes(x=Numero, y=Gastos, color=Banco))+
+    scale_color_brewer(palette = "Set2")+
+    geom_line()+
+    geom_point(alpha=0.7, shape=21)+
+    theme_light()+
+      ggtitle(paste(paste("Gastos para un precio de ",prix),"€"))+
+    theme(
+      plot.title = element_text(size=13, color="#03224c"),
+      axis.ticks.y=element_blank(),
+      axis.title=element_text(colour="#03224c",size=15, face="italic", family="serif"),
+      axis.text.y=element_text(colour="#03224c", family="serif")
+      
+  ) +
+    xlab("Numero de transacciones efectuados")+ # légende des axes
+    ylab("Gastos totales")
+  
+  ggplotly(p)
+  
+  
+  }
+  
+
+```
+
+### Estimacion para un precio de 20€
+```{r echo=FALSE,fig.width=6,fig.height=4}
+fun1(20)
+```
+
+
+### Estimacion para un precio de 50€
+```{r echo=FALSE,fig.width=6,fig.height=4}
+fun1(50)
+```
+
+
+### Estimacion para un precio de 100€
+```{r echo=FALSE,fig.width=6,fig.height=4}
+fun1(100)
+```
+
+
+### Estimacion para un precio de 200€
+```{r echo=FALSE,fig.width=6,fig.height=4}
+fun1(200)
+```
+
+### Estimacion para un precio de 1000€
+```{r echo=FALSE,fig.width=6,fig.height=4}
+fun1(1000 )
+```
