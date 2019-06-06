@@ -136,9 +136,30 @@ fun1 = function(prix, nbrmax){
 
 ```
 
+# Estudio de los gastos para la implementacion de un TPV Virtual
+
+Este documento presenta el estudio sobre los gastos provocados por la implementacion de un TPV Virtual.
+
+En primer parte, podemos ver el precio de los gastos por transacciones en funcion del precio del producto que vendemos. Entonces hemos efectuado un estimacion del volumen de negocios con sus gastos.
+
+Entonces, la ultima parte presenta los diferentes gastos de aplicacion segu los bancos.
+
+Por fin, nuestro consejo respeto a la parte econimica. 
 
 
-### Los diferentes gastos en foncion de los precios de los productos.
+
+
+
+
+
+
+
+# Evolucion de los gastos segun el precio de nuestros productos
+
+Para utilizar los TPV Virtual de los bancos y hacer transacion, los bancos aplican gastos por transaciones que son porcentaje de la suma de la transacion ( y con un minimo algunas veces) y hay gastos mensuales fijos para ciertos bancos.
+
+Siguientes graficos presenten las evoluciones de lo gastos en foncion del numero de transaciones mensuales y el precio del producto.
+
 ```{r echo=FALSE}
 # importation des librairies
 library(plotly)
@@ -285,30 +306,256 @@ fun1 = function(prix){
 
 ```
 
-### Estimacion para un precio de 20€
+### Un precio de producto 20€
 ```{r echo=FALSE,fig.width=6,fig.height=4}
 fun1(20)
 ```
 
 
-### Estimacion para un precio de 50€
+### Un precio de producto 50€
 ```{r echo=FALSE,fig.width=6,fig.height=4}
 fun1(50)
 ```
 
 
-### Estimacion para un precio de 100€
+### Un precio de producto 100€
 ```{r echo=FALSE,fig.width=6,fig.height=4}
 fun1(100)
 ```
 
 
-### Estimacion para un precio de 200€
+### Un precio de producto 200€
 ```{r echo=FALSE,fig.width=6,fig.height=4}
 fun1(200)
 ```
 
-### Estimacion para un precio de 1000€
+### Un precio de producto 1000€
 ```{r echo=FALSE,fig.width=6,fig.height=4}
 fun1(1000 )
 ```
+
+# Estimacion de los gastos con las estimaciones de venta
+
+En un segun tiempo, hemos realizado estimaciones de venta segun los dos productos de riegos (TAR) que podrian venderse por tarjeta. Ademas, se anadira los productos de Youse que van a venderse mayoritariamente por tarjeta.
+
+Consideremos que solamente los nuevos clientes van pagar con tarjeta. Asi, segun los meses despues de la aplicaion del pago con tarjeta, el importe total por tarjeta va a aumentar.
+
+```{r echo=FALSE,fig.width=6,fig.height=4 }
+
+library(readr)
+library(ggplot2)
+library(dplyr)
+library(plotly)
+fun2 = function(banco, gastos, mes, ChAff){
+    
+  Banco1=banco
+  Gastos1=gastos
+  data2 <- data.frame("Banco"=Banco1,"Gastos"=Gastos1)
+  
+  p2<-data2 %>%
+    arrange(as.numeric(Gastos))%>% # trier nos article par valeur
+    mutate(Banco=factor(Banco, Banco))%>% # trier nos article par valeur
+    ggplot(aes(x=Banco, y=as.numeric(Gastos))) +
+      geom_segment(aes(x=Banco, xend=Banco, y=0, yend=as.numeric(Gastos)), color="#03224c")+
+      geom_point( color="#f4aa42",size=2, alpha=0.6)+
+      theme_light()+
+      ggtitle(paste(paste("Estimacion de los gastos para el",mes),"mes"))+
+      coord_flip()+
+      
+      theme(
+            axis.title=element_text(colour="#03224c",size=15, face="italic", family="serif"),
+            axis.text.y=element_text(colour="#03224c",size=15, family="serif")
+            
+        ) +
+      xlab("Nombre del banco")+ # légende des axes
+      ylab(paste("Gastos implicados por",ChAff,"€"))+
+    annotate("text", x = data2$Banco[which(data2$Banco=="BBVA")], y = data2$Gastos[which(data2$Banco=="BBVA")]+10, label =paste(data2$Gastos[which(data2$Banco=="BBVA")] %>% round(2),"€"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
+    annotate("text", x = data2$Banco[which(data2$Banco=="Caixa")], y = data2$Gastos[which(data2$Banco=="Caixa")]+10, label =paste(data2$Gastos[which(data2$Banco=="Caixa")] %>% round(2),"€"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
+    annotate("text", x = data2$Banco[which(data2$Banco=="CecaBank")], y = data2$Gastos[which(data2$Banco=="CecaBank")]+10, label =paste(data2$Gastos[which(data2$Banco=="CecaBank")] %>% round(2),"€"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
+    annotate("text", x = data2$Banco[which(data2$Banco=="Santander")], y = data2$Gastos[which(data2$Banco=="Santander")]+10, label =paste(data2$Gastos[which(data2$Banco=="Santander")] %>% round(2),"€"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
+    annotate("text", x = data2$Banco[which(data2$Banco=="CajaRural")], y = data2$Gastos[which(data2$Banco=="CajaRural")]+10, label =paste(data2$Gastos[which(data2$Banco=="CajaRural")] %>% round(2),"€"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )
+    
+  ggplotly(p2)
+    
+}
+```
+
+
+```{r echo=FALSE,fig.width=6,fig.height=4}
+# fonction de calcules des frais
+
+funC= function(An1,Se1,Tr1,M1,An2,Se2,Tr2,M2,mes){
+  PrixB=c()
+  ListBancos=c("CajaRural","BBVA","Caixa","CecaBank","Santander")
+  Pr1An=317.6
+  Pr1Se=159.8
+  Pr1Tr=70.97
+  Pr1M=0
+  Pr2An=276.4
+  Pr2Se=137.4
+  Pr2Tr=137.0
+  Pr2M=110.3
+  
+  ListNbr=c(An1,Se1,Tr1,M1,An2,Se2,Tr2,M2)
+  ListPrix=c(Pr1An,Pr1Se,Pr1Tr,Pr1M,Pr2An,Pr2Se,Pr2Tr,Pr2M)
+  
+  
+  TasaRural=0.002
+  MiniRural=0.35
+  
+  TasaCaixa=0.003
+  MiniCaixa=0.06
+  MensualGCaixa=9
+  
+  TasaBBVA=0.013
+  
+  
+  
+  GastosRural=0
+  GastosBBVA=0
+  GastosCaixa=0
+  GastosCecaBank=0
+  GastosSantander=0
+  
+  # CajaRural
+  for ( i in 1:8){
+      if (ListPrix[i]*TasaRural<MiniRural){
+        GastosRural=GastosRural+ListNbr[i]*MiniRural
+      }
+      else {
+         GastosRural=GastosRural+ListNbr[i]*TasaRural*ListPrix[i]
+        }
+  }
+  
+  #Caixa
+  for ( i in 1:8){
+      if (ListPrix[i]*TasaCaixa<MiniCaixa){
+        GastosCaixa=GastosCaixa+ListNbr[i]*MiniCaixa
+      }
+      else {
+         GastosCaixa=GastosCaixa+ListNbr[i]*TasaCaixa*ListPrix[i]
+        }
+  }
+  GastosCaixa=GastosCaixa+MensualGCaixa
+  
+  #BBVA
+   for ( i in 1:8){
+     GastosBBVA=GastosBBVA+ListNbr[i]*TasaBBVA*ListPrix[i]
+        
+   }
+  
+  ChAff=0
+  for (i in 1:8){
+    ChAff=ChAff+ListNbr[i]*ListPrix[i]
+  }
+  
+  fun2(c("BBVA","Caixa","CecaBank","Santander","CajaRural"), c(GastosBBVA,GastosCaixa,GastosCecaBank,GastosSantander,GastosRural), mes, ChAff)
+  
+  
+  
+}
+
+ 
+ 
+ 
+ 
+ 
+ 
+``` 
+
+
+### Para el Primer mes.
+
+Cosideramos:
+- 15 contratos de Mediadores
+
+- 10 contratos de PayementsGlobal
+
+```{r echo=FALSE,fig.width=6,fig.height=4}
+
+funC(5,3,1,0,3,1,1,1,"primer")
+
+
+```
+
+### Estimacion por el sexto mes despues de la aplicacion.
+
+Cosideramos:
+* 15 contratos de Mediadores
+* 10 contratos de PayementsGlobal
+
+```{r echo=FALSE,fig.width=6,fig.height=4}
+
+funC(11,9,7,0,6,3,4,5,"segundo")
+
+
+```
+
+### Estimacion por un ano despues de la aplicacion.
+
+Cosideramos:
+* 15 contratos de Mediadores
+* 10 contratos de PayementsGlobal
+
+***
+
+```{r echo=FALSE,fig.width=6,fig.height=4}
+
+funC(11,9,7,0,6,3,4,5,"segundo")
+
+
+```
+
+
+wesh |   wesh 2 |  eodne
+-----|----------|---------
+erre |    errrr | effrrr
+
+
+# Los gastos de aplicacion
+
+
+Sobre los gastos de aplicacion, son muy baja y permite de probar diferentes soluciones antes de elegir lo mejor
+
+```{r}
+library(readr)
+library(ggplot2)
+library(dplyr)
+library(plotly)
+    
+Banco1=c("BBVA","Caixa","CecaBank","Santander","CajaRural")
+Gastos1=c(100,40,300,56,76)
+data3 <- data.frame("Banco"=Banco1,"Gastos"=Gastos1)
+
+p3<-data3 %>%
+  arrange(as.numeric(Gastos))%>% # trier nos article par valeur
+  mutate(Banco=factor(Banco, Banco))%>% # trier nos article par valeur
+  ggplot(aes(x=Banco, y=as.numeric(Gastos))) +
+    geom_segment(aes(x=Banco, xend=Banco, y=0, yend=as.numeric(Gastos)), color="#03224c")+
+    geom_point( color="#f4aa42",size=2, alpha=0.6)+
+    theme_light()+
+    coord_flip()+
+  ggtitle("Gastos de aplicacion")+
+  theme(
+    axis.title=element_blank(),
+    title=element_text(family="serif",colour="#03224c",size=15),
+    axis.text.y=element_text(colour="#03224c",size=15, family="serif")
+            
+  )+
+    annotate("text", x = data3$Banco[which(data3$Banco=="BBVA")], y = data3$Gastos[which(data3$Banco=="BBVA")]+10, label =paste(data3$Gastos[which(data3$Banco=="BBVA")] %>% round(2),"€"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
+    annotate("text", x = data3$Banco[which(data3$Banco=="Caixa")], y = data3$Gastos[which(data3$Banco=="Caixa")]+10, label =paste(data3$Gastos[which(data3$Banco=="Caixa")] %>% round(2),"€"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
+    annotate("text", x = data3$Banco[which(data3$Banco=="CecaBank")], y = data3$Gastos[which(data3$Banco=="CecaBank")]+10, label =paste(data3$Gastos[which(data3$Banco=="CecaBank")] %>% round(2),"€"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
+    annotate("text", x = data3$Banco[which(data3$Banco=="Santander")], y = data3$Gastos[which(data3$Banco=="Santander")]+10, label =paste(data3$Gastos[which(data3$Banco=="Santander")] %>% round(2),"€"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
+    annotate("text", x = data3$Banco[which(data3$Banco=="CajaRural")], y = data3$Gastos[which(data3$Banco=="CajaRural")]+10, label =paste(data3$Gastos[which(data3$Banco=="CajaRural")] %>% round(2),"€"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )
+
+ggplotly(p3)
+
+```
+
+# Conclusion
+
+Si tomamos un estimacion para 1 ano despues de la aplicacion, aqui la comparacion de los diferentes precios.
+![" wesh alors"](image/capt1.PNG)
+
+
+    
