@@ -10,24 +10,24 @@ knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message= FALSE)
 ```
 
 
-# Estudio de los gastos para la implementacion de un TPV Virtual
+# Estudio de los gastos para la implementación de un TPV Virtual
 
-Este documento presenta el estudio sobre los gastos provocados por la implementacion de un TPV Virtual.
+Este documento presenta el estudio sobre los gastos generados por la implementacion de un TPV Virtual.
 
-En primer parte, podemos ver el precio de los gastos por transacciones en funcion del precio del producto que vendemos. Entonces hemos efectuado un estimacion del volumen de negocios con sus gastos.
+Primero, veremos el precio de los gastos por transacciones en función del precio del producto que vendemos. Entonces hemos efectuado un estimación del volumen de negocios con sus gastos.
 
-Entonces, la ultima parte presenta los diferentes gastos de aplicacion segu los bancos.
+Entonces, la última parte presenta los diferentes gastos de aplicación según los bancos.
 
-Por fin, nuestro consejo respeto a la parte econimica. 
-
-
+Por fin, nuestro consejo respeto a la parte económica. 
 
 
-# Segun los precios de los productos
 
-Para utilizar los TPV Virtual de los bancos y hacer transacion, los bancos aplican gastos por transaciones que son porcentaje de la suma de la transacion ( y con un minimo algunas veces) y hay gastos mensuales fijos para ciertos bancos.
 
-Siguientes graficos presenten las evoluciones de lo gastos en foncion del numero de transaciones mensuales y del precio del producto.
+# Según los precios de los productos
+
+Para utilizar los TPVs Virtuales de los bancos y hacer transacciones por tarjeta, los bancos aplican gastos por transacciones que son un porcentaje de la suma de la transaccion ( y con un minimo algunas veces) y hay gastos mensuales fijos para ciertos bancos.
+
+Siguientes gráficos presentan las evoluciones de los gastos en función del número de transacciones mensuales y del precio del producto.
 
 ```{r echo=FALSE}
 # importation des librairies
@@ -243,7 +243,7 @@ fun1 = function(prix){
       axis.text.y=element_text(colour="#03224c", family="serif")
       
   ) +
-    xlab("Numero de transacciones efectuados")+ # légende des axes
+    xlab("Número de transacciones efectuadas")+ # légende des axes
     ylab("Gastos totales")
   
   ggplotly(p)
@@ -254,39 +254,39 @@ fun1 = function(prix){
 
 ```
 
-### Un precio de producto 20€
+### Un precio de producto de 20€
 ```{r echo=FALSE,fig.width=6,fig.height=4}
 fun1(20)
 ```
 
 
-### Un precio de producto 50€
+### Un precio de producto de 50€
 ```{r echo=FALSE,fig.width=6,fig.height=4}
 fun1(50)
 ```
 
 
-### Un precio de producto 100€
+### Un precio de producto de 100€
 ```{r echo=FALSE,fig.width=6,fig.height=4}
 fun1(100)
 ```
 
 
-### Un precio de producto 200€
+### Un precio de producto de 200€
 ```{r echo=FALSE,fig.width=6,fig.height=4}
 fun1(200)
 ```
 
-### Un precio de producto 1000€
+### Un precio de producto de 1000€
 ```{r echo=FALSE,fig.width=6,fig.height=4}
 fun1(1000 )
 ```
 
-# Estimacion de los gastos con las estimaciones de venta
+# Estimación de los gastos con las estimaciones de venta
 
-En un segun tiempo, hemos realizado estimaciones de venta segun los dos productos de riegos (TAR) que podrian venderse por tarjeta. Ademas, se anadira los productos de Youse que van a venderse mayoritariamente por tarjeta.
+En un segundo tiempo, hemos realizado estimaciones de venta según los dos productos de riesgo (TAR) que podrían venderse por tarjeta. Además, se añadirán los productos de Youse que van a venderse mayoritariamente por tarjeta.
 
-Consideremos que solamente los nuevos clientes van pagar con tarjeta. Asi, segun los meses despues de la aplicaion del pago con tarjeta, el importe total por tarjeta va a aumentar.
+Consideramos que solamente los nuevos clientes van a pagar por tarjeta. Así, segun los meses después de la aplicación del pago por tarjeta, el importe total por tarjeta va a aumentar.
 
 ```{r echo=FALSE,fig.width=6,fig.height=4 }
 
@@ -307,7 +307,7 @@ fun2 = function(banco, gastos, mes, ChAff,add){
       geom_segment(aes(x=Banco, xend=Banco, y=0, yend=as.numeric(Gastos)), color="#03224c")+
       geom_point( color="#f4aa42",size=2, alpha=0.6)+
       theme_light()+
-      ggtitle(paste(paste("Estimacion de los gastos para el",mes),"mes"))+
+      ggtitle(paste(paste("Estimación de los gastos para el",mes),"mes"))+
       coord_flip()+
       
       theme(
@@ -316,7 +316,7 @@ fun2 = function(banco, gastos, mes, ChAff,add){
             
         ) +
       xlab("Nombre del banco")+ # légende des axes
-      ylab(paste("Gastos implicados por",ChAff,"€"))+
+      ylab(paste("Gastos implicados para un importe de ",ChAff,"€"))+
     annotate("text", x = data2$Banco[which(data2$Banco=="BBVA")], y = data2$Gastos[which(data2$Banco=="BBVA")]+add, label =paste(data2$Gastos[which(data2$Banco=="BBVA")] %>% round(2),"€"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
     annotate("text", x = data2$Banco[which(data2$Banco=="Caixa-Cyber")], y = data2$Gastos[which(data2$Banco=="Caixa-Cyber")]+add, label =paste(data2$Gastos[which(data2$Banco=="Caixa-Cyber")] %>% round(2),"€"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
     annotate("text", x = data2$Banco[which(data2$Banco=="CecaBank")], y = data2$Gastos[which(data2$Banco=="CecaBank")]+add, label =paste(data2$Gastos[which(data2$Banco=="CecaBank")] %>% round(2),"€"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
@@ -442,7 +442,7 @@ funC= function(An1,Se1,Tr1,M1,An2,Se2,Tr2,M2,Y1,mes,add){
 ``` 
 
 
-### Para el Primer mes.
+### Para el primer mes.
 
 Consideramos:
 
@@ -457,7 +457,7 @@ funC(5,3,1,0,3,1,1,1,0,"primer",20)
 
 ```
 
-### Estimacion por el sexto mes despues de la aplicacion.
+### Estimación por el sexto mes despues de la aplicación.
 
 Consideramos:
 
@@ -491,7 +491,7 @@ funC(6,6,5,0,3,2,3,3,195,"sexto",25)
 ```
 
 
-### Para un ano despues de la aplicacion.
+### Para un año después de la aplicacion.
 
 Consideramos:
 
@@ -510,10 +510,10 @@ funC(11,9,7,0,6,2,4,5,320,"13",30)
 
 
 
-# Los gastos de aplicacion
+# Los gastos de aplicación
 
 
-Los gastos de aplicacion son los gastos que pagamos al principio para la instalacion del TPV Virtual. Sin embargo, ningun bancos con lo que queremos trabajar facturan gastos de aplicacion, hay solamente la solucion Cyberpack de la Caixa que pide 100€ al principio pero no vamos a trabajar con este solucion.
+Los gastos de aplicación son los gastos que pagamos al principio para la instalación del TPV Virtual. Sin embargo, ningún banco con lo que queremos trabajar facturan gastos de aplicación, hay solamente la solución Cyberpack de la Caixa que pide 100€ al principio pero no vamos a trabajar con este solución.
 
 ```{r echo=FALSE}
 library(readr)
@@ -533,7 +533,7 @@ p3<-data3 %>%
     geom_point( color="#f4aa42",size=2, alpha=0.6)+
     theme_light()+
     coord_flip()+
-  ggtitle("Gastos de aplicacion")+
+  ggtitle("Gastos de aplicación")+
   theme(
     axis.title=element_blank(),
     title=element_text(family="serif",colour="#03224c",size=15),
@@ -555,7 +555,7 @@ ggplotly(p3)
 
 
 
-Si tomamos un estimacion para el primer ano despues de la aplicacion, aqui la comparacion de los diferentes precios.
+Si tenemos en cuenta un estimación para el primer año después de la aplicación, salen los precios y porcentajes siguientes.
 
 ### Estimacion SIN los productos de Youse ( 1 mes y 7 mes)
 
@@ -565,10 +565,10 @@ Si tomamos un estimacion para el primer ano despues de la aplicacion, aqui la co
 
 ![""](image/wesh2.PNG)
 
-Con todos esas herramientas de comparacion economicas, hemos eligido 2 proveedores. Sin embargo, no podiamos elegir el banco BBVA porque no obtuvimos ninguna respuesta de ellos en cuanto a los precios reales.
-Adémas, no hemos eligido Caja Rural o la solucion CyberPack de Caixa porques son TPV  muy limitados.
+Con todas esas herramientas de comparación económicas, hemos elegido a 2 proveedores. Sin embargo, no podíamos elegir el banco BBVA porque no obtuvimos ninguna respuesta de ellos en cuanto a los precios reales.
+Además, no hemos eligido Caja Rural o la solucion CyberPack de Caixa porque son TPV  muy limitados.
 
-Asi, hemos eligido la Caixa con su solucion Addon Payment y el banco Santander con la tecnologia  Redsys.
+Así, hemos elegido la Caixa con su solución Addon Payment y el banco Santander con la tecnología  Redsys.
 
 
 ### Los gastos durante el primer ano para Santander y la Caixa.
@@ -598,7 +598,7 @@ data5= data.frame("Mes"=x,"Gastos"=c(prixS,prixC), "Banco"=c(bS,bC))
     geom_line()+
     geom_point(alpha=0.7, shape=21)+
     theme_light()+
-      ggtitle("Gastos para el primer ano")+
+      ggtitle("Gastos para el primer año")+
     theme(
       plot.title = element_text(size=13, color="#03224c"),
       axis.text.x   =element_blank(),
@@ -616,7 +616,7 @@ data5= data.frame("Mes"=x,"Gastos"=c(prixS,prixC), "Banco"=c(bS,bC))
 
 ```
 
-Si reportamos estas cifras a lo largo de un ano,los costes incurridos representen estos porcentajes del volumen total intercambiado por tarjeta de crédito.
+A lo largo de un año,los costes incurridos representan estos porcentajes del volumen total intercambiado por tarjeta de crédito.
 ![""](image/wesh3.PNG)
 
 
