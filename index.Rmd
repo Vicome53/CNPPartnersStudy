@@ -30,19 +30,22 @@ Para utilizar los TPVs Virtuales de los bancos y hacer transacciones por tarjeta
 Siguientes gráficos presentan las evoluciones de los gastos en función del número de transacciones mensuales y del precio del producto.
 
 ```{r echo=FALSE}
-# importation des librairies
+# importacion de los modulos
 library(plotly)
 library(hrbrthemes)
-# La fonction qui permet de calculer le prix
-fun1 = function(prix){
+
+# La funcion que permite calcular los precios
+fun1 = function(prix){ 
+  # el arumento es el precio del producto que vendemos
   
   # CAIXA 
   
   # CyberPac
    
-  x1=c(0,5,10,20,30,40,50,60,70,80,90,100)
+  x1=c(0,5,10,20,30,40,50,60,70,80,90,100) # numero de productos
   x2=c()
   y1=c(0,0,0,0,0,0,0,0,0,0,0,0)
+  
   tasaCaiXa= 0.003
   minimoCaixa=0.06
   tr1Caixa=600
@@ -82,6 +85,7 @@ fun1 = function(prix){
   }
   
   #AddonPayments
+  
   xAd1=c(0,5,10,20,30,40,50,60,70,80,90,100)
   yAd=c(0,0,0,0,0,0,0,0,0,0,0,0)
   tasaAd= 0.009
@@ -211,7 +215,7 @@ fun1 = function(prix){
     }
   
   
-  # Permet de faire la 3 eme variable avec les noms des banques
+  # para reconocer los diferentes bancos, anademos un label con el nombre del banco
   zBB=c()
   zc=c()
   zR=c()
@@ -226,7 +230,7 @@ fun1 = function(prix){
   for ( i in 1:length(xSan1)){zSan=c(zSan,"Santander")}
   
    
-# création de la data.frame
+# créacion del dataframe para ver los datos sobre un diagrama
   data <- data.frame("Numero"=c(x3,xR3,xBB1,xCe1,xAd1,xSan1),"Gastos"=c(y1,yR,yBB,yCe,yAd,ySan), "Banco"=c(zc,zR,zBB,zCe,zAd,zSan))
   
   p <- data %>%
@@ -289,13 +293,13 @@ En un segundo tiempo, hemos realizado estimaciones de venta según los dos produ
 Consideramos que solamente los nuevos clientes van a pagar por tarjeta. Así, segun los meses después de la aplicación del pago por tarjeta, el importe total por tarjeta va a aumentar.
 
 ```{r echo=FALSE,fig.width=6,fig.height=4 }
-
+# importacion de los modulos
 library(readr)
 library(ggplot2)
 library(dplyr)
 library(plotly)
 fun2 = function(banco, gastos, mes, ChAff,add){
-    
+    # es solamente una funcion para visualizar los diagrammas
   Banco1=banco
   Gastos1=gastos
   data2 <- data.frame("Banco"=Banco1,"Gastos"=Gastos1)
@@ -331,11 +335,20 @@ fun2 = function(banco, gastos, mes, ChAff,add){
 
 
 ```{r echo=FALSE,fig.width=6,fig.height=4}
-# fonction de calcules des frais
+# Esta funcion calcula los gastos por cada banco segun las estimaciones de venta de todos los productos.
 
 funC= function(An1,Se1,Tr1,M1,An2,Se2,Tr2,M2,Y1,mes,add){
+  # An1 es el numero de producto TAR GlobalFinanz (con pago anual) que vendemos. ( numero de transacciones)
+  # Se1 TAR GlobalFinanz ( con pago semestral)( numero de transacciones)
+  #...
+  # An2 TAR Mediadores ( con pago anual)( numero de transacciones)
+  #...
+  # Y1 YOUSE( numero de transacciones)
+  # mes
+  # add ( es solamente estetico ) es el suplemento que debemos anadir para que ver el precio al lado de los puntos en los diagrammas.
+  
   PrixB=c()
-  ListBancos=c("CajaRural","BBVA","Caixa-Cyber","CecaBank","Santander","Caixa-Addon")
+  ListBancos=c("CajaRural","BBVA","Caixa-Cyber","CecaBank","Santander","Caixa-Addon") # es los precios medios que hemos calculado 
   Pr1An=317.6
   Pr1Se=159.8
   Pr1Tr=70.97
@@ -350,7 +363,7 @@ funC= function(An1,Se1,Tr1,M1,An2,Se2,Tr2,M2,Y1,mes,add){
   ListNbr=c(An1,Se1,Tr1,M1,An2,Se2,Tr2,M2,Y1)
   ListPrix=c(Pr1An,Pr1Se,Pr1Tr,Pr1M,Pr2An,Pr2Se,Pr2Tr,Pr2M,PrY1)
   
-  
+  # los datos de gastos sobre los diferentes bancos
   TasaRural=0.002
   MiniRural=0.35
   
@@ -361,10 +374,11 @@ funC= function(An1,Se1,Tr1,M1,An2,Se2,Tr2,M2,Y1,mes,add){
   TasaBBVA=0.013
   
   TasaCeca=0.01
-  MensualGCeca=150
+  MensualGCeca=20
   
   TasaAd=0.009
   GastoTAd=0.19
+  MensualGAd=19
   
   TasaSan=0.013
   MensualGSan=40
@@ -408,6 +422,7 @@ funC= function(An1,Se1,Tr1,M1,An2,Se2,Tr2,M2,Y1,mes,add){
      GastosAd=GastosAd+ListNbr[i]*((TasaAd*ListPrix[i])+ GastoTAd)
         
    }
+  GastosAd=GastosAd + MensualGAd
   
   #Ceca
    for ( i in 1:length(ListNbr)){
@@ -425,15 +440,15 @@ funC= function(An1,Se1,Tr1,M1,An2,Se2,Tr2,M2,Y1,mes,add){
   
   #Santander
   VentaPl=20
-  if (ChAff< 1000){GastosSantander=10+VentaPl}
+  if (ChAff< 1000){GastosSantander=10+13}
   else if (ChAff<2000){GastosSantander=18+VentaPl}
   else if (ChAff<4000){GastosSantander=35+VentaPl}
   else if (ChAff<8000){GastosSantander=65+VentaPl}
-  else if (ChAff<16000){GastosSantander=120+VentaPl}
+  else if (ChAff<16000){GastosSantander=120+VentaPl+20}
   else if (ChAff<25000){GastosSantander=190+VentaPl+20}
     
   
-  
+  # llamamos la function fun2 para visualizar los gastos
   fun2(c("BBVA","Caixa-Cyber","CecaBank","Santander","CajaRural","Caixa-Addon"), c(GastosBBVA,GastosCaixa,GastosCecaBank,GastosSantander,GastosRural,GastosAd), mes, ChAff,add)
   
 }
@@ -457,7 +472,7 @@ funC(5,3,1,0,3,1,1,1,0,"primer",20)
 
 ```
 
-### Estimación por el sexto mes despues de la aplicación.
+### Estimación por el siete mes despues de la aplicación.
 
 Consideramos:
 
@@ -472,7 +487,7 @@ funC(6,6,5,0,3,2,3,3,0,"sexto",30)
 
 ```
 
-### Para el sexto mes con Youse .
+### Para el siete mes con Youse .
 
 Consideramos ahora los productos de Youse.
 Consideramos:
@@ -516,6 +531,7 @@ funC(11,9,7,0,6,2,4,5,320,"13",30)
 Los gastos de aplicación son los gastos que pagamos al principio para la instalación del TPV Virtual. Sin embargo, ningún banco con lo que queremos trabajar facturan gastos de aplicación, hay solamente la solución Cyberpack de la Caixa que pide 100€ al principio pero no vamos a trabajar con este solución.
 
 ```{r echo=FALSE}
+# es solamente para vizualisar los gastos de aplicacion
 library(readr)
 library(ggplot2)
 library(dplyr)
@@ -573,12 +589,14 @@ Así, hemos elegido la Caixa con su solución Addon Payment y el banco Santander
 
 ### Los gastos durante el primer ano para Santander y la Caixa.
 ```{r echo=FALSE}
+# es solamente una funcion para visualizar los diferentes gastos segun Santander y Caixa durante un ano
 library(readr)
 library(ggplot2)
 library(dplyr)
 library(plotly)
+# prixS y prixC son los precios que hemos calculado con las otras funciones et que hemos utilizado para cumplir estas listas
 prixS=c(85,85,85,85,85,85,85,85,140,140,140,140)
-prixC=c(49,58,67,78,83,96,112,114,123,134,140,152)
+prixC=c(68,77,87,97,102,115,131,133,142,153,159,171)
 
 totalSan=0
 totalCaixa=0
