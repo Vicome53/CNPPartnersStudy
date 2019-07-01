@@ -161,9 +161,9 @@ fun1 = function(prix){
   #CecaBank
   xCe1=c(0,5,10,20,30,40,50,60,70,80,90,100)
   yCe=c(0,0,0,0,0,0,0,0,0,0,0,0)
-  tasaCe= 0.01
+  tasaCe= 0.014
   tr1Ce=0
-  tr1CePrix=150
+  tr1CePrix=50
   for ( i in 1:length(xCe1)){
     yCe[i]=xCe1[i]*tasaCe*prix+tr1CePrix
   }
@@ -213,6 +213,9 @@ fun1 = function(prix){
       
     }
     }
+   for ( i in 1:(length(xSan1)-1)){
+     ySan[i]=ySan[i]+xSan1[i]*0.05
+   }
   
   
   # para reconocer los diferentes bancos, anademos un label con el nombre del banco
@@ -326,7 +329,9 @@ fun2 = function(banco, gastos, mes, ChAff,add){
     annotate("text", x = data2$Banco[which(data2$Banco=="CecaBank")], y = data2$Gastos[which(data2$Banco=="CecaBank")]+add, label =paste(data2$Gastos[which(data2$Banco=="CecaBank")] %>% round(2),"€"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
     annotate("text", x = data2$Banco[which(data2$Banco=="Santander")], y = data2$Gastos[which(data2$Banco=="Santander")]+add, label =paste(data2$Gastos[which(data2$Banco=="Santander")] %>% round(2),"€"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
     annotate("text", x = data2$Banco[which(data2$Banco=="CajaRural")], y = data2$Gastos[which(data2$Banco=="CajaRural")]+add, label =paste(data2$Gastos[which(data2$Banco=="CajaRural")] %>% round(2),"€"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
-    annotate("text", x = data2$Banco[which(data2$Banco=="Caixa-Addon")], y = data2$Gastos[which(data2$Banco=="Caixa-Addon")]+add, label =paste(data2$Gastos[which(data2$Banco=="Caixa-Addon")] %>% round(2),"€"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )
+    annotate("text", x = data2$Banco[which(data2$Banco=="Caixa-Addon")], y = data2$Gastos[which(data2$Banco=="Caixa-Addon")]+add, label =paste(data2$Gastos[which(data2$Banco=="Caixa-Addon")] %>% round(2),"€"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
+    annotate("text", x = data2$Banco[which(data2$Banco=="PayPlug")], y = data2$Gastos[which(data2$Banco=="PayPlug")]+add, label =paste(data2$Gastos[which(data2$Banco=="PayPlug")] %>% round(2),"€"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
+    annotate("text", x = data2$Banco[which(data2$Banco=="PayPlug-Prenium")], y = data2$Gastos[which(data2$Banco=="PayPlug-Prenium")]+add, label =paste(data2$Gastos[which(data2$Banco=="PayPlug-Prenium")] %>% round(2),"€"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )
     
   ggplotly(p2)
     
@@ -373,8 +378,8 @@ funC= function(An1,Se1,Tr1,M1,An2,Se2,Tr2,M2,Y1,mes,add){
   
   TasaBBVA=0.013
   
-  TasaCeca=0.01
-  MensualGCeca=20
+  TasaCeca=0.014
+  MensualGCeca=50
   
   TasaAd=0.009
   GastoTAd=0.19
@@ -383,12 +388,21 @@ funC= function(An1,Se1,Tr1,M1,An2,Se2,Tr2,M2,Y1,mes,add){
   TasaSan=0.013
   MensualGSan=40
   
+  TasaPP=0.008
+  GastoTPP=0.15
+  MensualGPP=30
+  
+  TasaPP2=0.005
+  MensualGPP2=80
+  
   GastosRural=0
   GastosBBVA=0
   GastosCaixa=0
   GastosCecaBank=0
   GastosSantander=0
   GastosAd=0
+  GastosPP=0
+  GastosPP2=0
   
   # CajaRural
   for ( i in 1:length(ListNbr)){
@@ -446,10 +460,31 @@ funC= function(An1,Se1,Tr1,M1,An2,Se2,Tr2,M2,Y1,mes,add){
   else if (ChAff<8000){GastosSantander=65+VentaPl}
   else if (ChAff<16000){GastosSantander=120+VentaPl+20}
   else if (ChAff<25000){GastosSantander=190+VentaPl+20}
+  totprod=0
+  for (i in 1: length(ListNbr)){
+    totprod=totprod+ListNbr[i]
+    
+  }
+  GastosSantander=GastosSantander+ totprod*0.05
+  
+  #PayplugPro
+   for ( i in 1:length(ListNbr)){
+     GastosPP=GastosPP+ListNbr[i]*((TasaPP*ListPrix[i])+ GastoTPP)
+        
+   }
+  GastosPP=GastosPP + MensualGPP
+  #PayplugPrenium
+  for ( i in 1:length(ListNbr)){
+     GastosPP2=GastosPP2+ListNbr[i]*((TasaPP2*ListPrix[i])+ GastoTPP)
+        
+   }
+  GastosPP2=GastosPP2 + MensualGPP2
+  
+  
     
   
   # llamamos la function fun2 para visualizar los gastos
-  fun2(c("BBVA","Caixa-Cyber","CecaBank","Santander","CajaRural","Caixa-Addon"), c(GastosBBVA,GastosCaixa,GastosCecaBank,GastosSantander,GastosRural,GastosAd), mes, ChAff,add)
+  fun2(c("BBVA","Caixa-Cyber","CecaBank","Santander","CajaRural","Caixa-Addon","PayPlug","PayPlug-Prenium"), c(GastosBBVA,GastosCaixa,GastosCecaBank,GastosSantander,GastosRural,GastosAd,GastosPP,GastosPP2), mes, ChAff,add)
   
 }
 
@@ -525,47 +560,7 @@ funC(11,9,7,0,6,2,4,5,320,"13",30)
 
 
 
-# Los gastos de aplicación
 
-
-Los gastos de aplicación son los gastos que pagamos al principio para la instalación del TPV Virtual. Sin embargo, ningún banco con lo que queremos trabajar facturan gastos de aplicación, hay solamente la solución Cyberpack de la Caixa que pide 100€ al principio pero no vamos a trabajar con este solución.
-
-```{r echo=FALSE}
-# es solamente para vizualisar los gastos de aplicacion
-library(readr)
-library(ggplot2)
-library(dplyr)
-library(plotly)
-    
-Banco1=c("BBVA","Caixa-Addon","Caixa-Cyber","CecaBank","Santander","CajaRural")
-Gastos1=c(0,0,100,0,0,0)
-data3 <- data.frame("Banco"=Banco1,"Gastos"=Gastos1)
-
-p3<-data3 %>%
-  arrange(as.numeric(Gastos))%>% # trier nos article par valeur
-  mutate(Banco=factor(Banco, Banco))%>% # trier nos article par valeur
-  ggplot(aes(x=Banco, y=as.numeric(Gastos))) +
-    geom_segment(aes(x=Banco, xend=Banco, y=0, yend=as.numeric(Gastos)), color="#03224c")+
-    geom_point( color="#f4aa42",size=2, alpha=0.6)+
-    theme_light()+
-    coord_flip()+
-  ggtitle("Gastos de aplicación")+
-  theme(
-    axis.title=element_blank(),
-    title=element_text(family="serif",colour="#03224c",size=15),
-    axis.text.y=element_text(colour="#03224c",size=15, family="serif")
-            
-  )+
-    annotate("text", x = data3$Banco[which(data3$Banco=="BBVA")], y = data3$Gastos[which(data3$Banco=="BBVA")]+10, label =paste(data3$Gastos[which(data3$Banco=="BBVA")] %>% round(2),"€"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
-    annotate("text", x = data3$Banco[which(data3$Banco=="Caixa-Addon")], y = data3$Gastos[which(data3$Banco=="Caixa-Addon")]+10, label =paste(data3$Gastos[which(data3$Banco=="Caixa-Addon")] %>% round(2),"€"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
-    annotate("text", x = data3$Banco[which(data3$Banco=="CecaBank")], y = data3$Gastos[which(data3$Banco=="CecaBank")]+10, label =paste(data3$Gastos[which(data3$Banco=="CecaBank")] %>% round(2),"€"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
-    annotate("text", x = data3$Banco[which(data3$Banco=="Santander")], y = data3$Gastos[which(data3$Banco=="Santander")]+10, label =paste(data3$Gastos[which(data3$Banco=="Santander")] %>% round(2),"€"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
-    annotate("text", x = data3$Banco[which(data3$Banco=="CajaRural")], y = data3$Gastos[which(data3$Banco=="CajaRural")]+10, label =paste(data3$Gastos[which(data3$Banco=="CajaRural")] %>% round(2),"€"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
-    annotate("text", x = data3$Banco[which(data3$Banco=="Caixa-Cyber")], y = data3$Gastos[which(data3$Banco=="Caixa-Cyber")]+10, label =paste(data3$Gastos[which(data3$Banco=="Caixa-Cyber")] %>% round(2),"€"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )
-
-ggplotly(p3)
-
-```
 
 # Conclusion
 
@@ -573,30 +568,359 @@ ggplotly(p3)
 
 Si tenemos en cuenta un estimación para el primer año después de la aplicación, salen los precios y porcentajes siguientes.
 
-### Estimacion SIN los productos de Youse ( 1 mes y 7 mes)
+### Estimacion para los quatros ultimos meses de 2019
+```{r echo=FALSE,fig.width=6,fig.height=4}
+# Esta funcion calcula los gastos por cada banco segun las estimaciones de venta de todos los productos.
 
-![""](image/wesh1.PNG)
+funC2= function(ProdNbr,mes,add){
+  # An1 es el numero de producto TAR GlobalFinanz (con pago anual) que vendemos. ( numero de transacciones)
+  # Se1 TAR GlobalFinanz ( con pago semestral)( numero de transacciones)
+  #...
+  # An2 TAR Mediadores ( con pago anual)( numero de transacciones)
+  #...
+  # Y1 YOUSE( numero de transacciones)
+  # mes
+  # add ( es solamente estetico ) es el suplemento que debemos anadir para que ver el precio al lado de los puntos en los diagrammas.
+  
+  PrixB=c()
+  ListBancos=c("CajaRural","BBVA","Caixa-Cyber","CecaBank","Santander","Caixa-Addon") # es los precios medios que hemos calculado 
+  Pr1An=317.6
+  Pr1Se=159.8
+  Pr1Tr=70.97
+  Pr1M=0
+  Pr2An=276.4
+  Pr2Se=137.4
+  Pr2Tr=137.0
+  Pr2M=110.3
+  PrY1=14.88
+  
+  
+  ListNbr=ProdNbr
+  ListPrix=c(Pr1An,Pr1Se,Pr1Tr,Pr1M,Pr2An,Pr2Se,Pr2Tr,Pr2M,PrY1)
+  
+  # los datos de gastos sobre los diferentes bancos
+  TasaRural=0.002
+  MiniRural=0.35
+  
+  TasaCaixa=0.003
+  MiniCaixa=0.06
+  MensualGCaixa=9
+  
+  TasaBBVA=0.013
+  
+  TasaCeca=0.014
+  MensualGCeca=50
+  
+  TasaAd=0.009
+  GastoTAd=0.19
+  MensualGAd=19
+  
+  TasaSan=0.013
+  MensualGSan=40
+  
+  GastosRural=0
+  GastosBBVA=0
+  GastosCaixa=0
+  GastosCecaBank=0
+  GastosSantander=0
+  GastosAd=0
+  
+  # CajaRural
+  for ( i in 1:length(ListNbr)){
+      if (ListPrix[i]*TasaRural<MiniRural){
+        GastosRural=GastosRural+ListNbr[i]*MiniRural
+      }
+      else {
+         GastosRural=GastosRural+ListNbr[i]*TasaRural*ListPrix[i]
+        }
+  }
+  
+  #Caixa
+  for ( i in 1:length(ListNbr)){
+      if (ListPrix[i]*TasaCaixa<MiniCaixa){
+        GastosCaixa=GastosCaixa+ListNbr[i]*MiniCaixa
+      }
+      else {
+         GastosCaixa=GastosCaixa+ListNbr[i]*TasaCaixa*ListPrix[i]
+        }
+  }
+  GastosCaixa=GastosCaixa+MensualGCaixa
+  
+  #BBVA
+   for ( i in 1:length(ListNbr)){
+     GastosBBVA=GastosBBVA+ListNbr[i]*TasaBBVA*ListPrix[i]
+        
+   }
+  
+  #Addons
+   for ( i in 1:length(ListNbr)){
+     GastosAd=GastosAd+ListNbr[i]*((TasaAd*ListPrix[i])+ GastoTAd)
+        
+   }
+  GastosAd=GastosAd + MensualGAd
+  
+  #Ceca
+   for ( i in 1:length(ListNbr)){
+     GastosCecaBank=GastosCecaBank+ListNbr[i]*TasaCeca*ListPrix[i]
+        
+   }
+  GastosCecaBank=GastosCecaBank + MensualGCeca
+  
+ 
+  
+  ChAff=0
+  for (i in 1:length(ListNbr)){
+    ChAff=ChAff+ListNbr[i]*ListPrix[i]
+  }
+  
+  #Santander
+  VentaPl=20
+  if (ChAff< 1000){GastosSantander=10+13}
+  else if (ChAff<2000){GastosSantander=18+VentaPl}
+  else if (ChAff<4000){GastosSantander=35+VentaPl}
+  else if (ChAff<8000){GastosSantander=65+VentaPl}
+  else if (ChAff<16000){GastosSantander=120+VentaPl+20}
+  else if (ChAff<25000){GastosSantander=190+VentaPl+20}
+  
+  totprod=0
+  for (i in 1: length(ListNbr)){
+    totprod=totprod+ListNbr[i]
+    
+  }
+  GastosSantander=GastosSantander+ totprod*0.05
+  
+  
+  
+   
+  #PayplugPro
+    GastosPP=0
+  GastosPP2=0
+   TasaPP=0.008
+  GastoTPP=0.15
+  MensualGPP=30
+  
+  TasaPP2=0.005
+  MensualGPP2=80
+   for ( i in 1:length(ListNbr)){
+     GastosPP=GastosPP+ListNbr[i]*((TasaPP*ListPrix[i])+ GastoTPP)
+        
+   }
+  GastosPP=GastosPP + MensualGPP
+  #PayplugPrenium
+  for ( i in 1:length(ListNbr)){
+     GastosPP2=GastosPP2+ListNbr[i]*((TasaPP2*ListPrix[i])+ GastoTPP)
+        
+   }
+  GastosPP2=GastosPP2 + MensualGPP2
+  
+    
 
-### Estimacion CON los productos de Youse ( 7 mes y 13 mes)
+  return(c(GastosPP,GastosCecaBank,GastosAd,GastosSantander,ChAff))
+  
+  
+}
 
-![""](image/wesh2.PNG)
+ 
+``` 
+```{r echo=FALSE,fig.width=6,fig.height=4 }
+# importacion de los modulos
+library(readr)
+library(ggplot2)
+library(dplyr)
+library(plotly)
+funZiz = function(banco, gastos, ChAff,add,ajout){
+    # es solamente una funcion para visualizar los diagrammas
+  Banco1=banco
+  Gastos1=gastos
+  data2 <- data.frame("Banco"=Banco1,"Gastos"=Gastos1)
+  
+  p2<-data2 %>%
+    arrange(as.numeric(Gastos))%>% # trier nos article par valeur
+    mutate(Banco=factor(Banco, Banco))%>% # trier nos article par valeur
+    ggplot(aes(x=Banco, y=as.numeric(Gastos))) +
+      geom_segment(aes(x=Banco, xend=Banco, y=0, yend=as.numeric(Gastos)), color="#03224c")+
+      geom_point( color="#f4aa42",size=2, alpha=0.6)+
+      theme_light()+
+      ggtitle(paste("Estimación de los gastos para",ajout))+
+      coord_flip()+
+      
+      theme(
+            axis.title=element_text(colour="#03224c",size=15, face="italic", family="serif"),
+            axis.text.y=element_text(colour="#03224c",size=15, family="serif")
+            
+        ) +
+      xlab("Nombre del banco")+ # légende des axes
+      ylab(paste("Gastos implicados para el importe total de 2020 :  ",ChAff,"€"))+
+    annotate("text", x = data2$Banco[which(data2$Banco=="BBVA")], y = data2$Gastos[which(data2$Banco=="BBVA")]+add, label =paste(data2$Gastos[which(data2$Banco=="BBVA")] %>% round(2),"€"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
+    annotate("text", x = data2$Banco[which(data2$Banco=="Caixa-Cyber")], y = data2$Gastos[which(data2$Banco=="Caixa-Cyber")]+add, label =paste(data2$Gastos[which(data2$Banco=="Caixa-Cyber")] %>% round(2),"€"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
+    annotate("text", x = data2$Banco[which(data2$Banco=="CecaBank")], y = data2$Gastos[which(data2$Banco=="CecaBank")]+add, label =paste(data2$Gastos[which(data2$Banco=="CecaBank")] %>% round(2),"€"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
+    annotate("text", x = data2$Banco[which(data2$Banco=="Santander")], y = data2$Gastos[which(data2$Banco=="Santander")]+add, label =paste(data2$Gastos[which(data2$Banco=="Santander")] %>% round(2),"€"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
+    annotate("text", x = data2$Banco[which(data2$Banco=="CajaRural")], y = data2$Gastos[which(data2$Banco=="CajaRural")]+add, label =paste(data2$Gastos[which(data2$Banco=="CajaRural")] %>% round(2),"€"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
+    annotate("text", x = data2$Banco[which(data2$Banco=="Caixa-Addon")], y = data2$Gastos[which(data2$Banco=="Caixa-Addon")]+add, label =paste(data2$Gastos[which(data2$Banco=="Caixa-Addon")] %>% round(2),"€"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
+    annotate("text", x = data2$Banco[which(data2$Banco=="PayPlug")], y = data2$Gastos[which(data2$Banco=="PayPlug")]+add, label =paste(data2$Gastos[which(data2$Banco=="PayPlug")] %>% round(2),"€"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
+    annotate("text", x = data2$Banco[which(data2$Banco=="PayPlug-Prenium")], y = data2$Gastos[which(data2$Banco=="PayPlug-Prenium")]+add, label =paste(data2$Gastos[which(data2$Banco=="PayPlug-Prenium")] %>% round(2),"€"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )
+    
+  ggplotly(p2)
+
+}
+```
+
+```{r echo=FALSE,fig.width=6,fig.height=4 }
+# importacion de los modulos
+library(readr)
+library(ggplot2)
+library(dplyr)
+library(plotly)
+funZizp = function(banco, gastos, ChAff,add,ajout){
+    # es solamente una funcion para visualizar los diagrammas
+  Banco1=banco
+  Gastos1=gastos
+  data2 <- data.frame("Banco"=Banco1,"Gastos"=Gastos1)
+  
+  p2<-data2 %>%
+    arrange(as.numeric(Gastos))%>% # trier nos article par valeur
+    mutate(Banco=factor(Banco, Banco))%>% # trier nos article par valeur
+    ggplot(aes(x=Banco, y=as.numeric(Gastos))) +
+      geom_segment(aes(x=Banco, xend=Banco, y=0, yend=as.numeric(Gastos)), color="#03224c")+
+      geom_point( color="#f4aa42",size=2, alpha=0.6)+
+      theme_light()+
+      ggtitle(paste("Estimación de los porcentajes para",ajout))+
+      coord_flip()+
+      
+      theme(
+            axis.title=element_text(colour="#03224c",size=15, face="italic", family="serif"),
+            axis.text.y=element_text(colour="#03224c",size=15, family="serif")
+            
+        ) +
+      xlab("Nombre del banco")+ # légende des axes
+      ylab(paste("Gastos implicados para el importe total de 2020 :  ",ChAff,"€"))+
+    annotate("text", x = data2$Banco[which(data2$Banco=="BBVA")], y = data2$Gastos[which(data2$Banco=="BBVA")]+add, label =paste(data2$Gastos[which(data2$Banco=="BBVA")] %>% round(2),"%"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
+    annotate("text", x = data2$Banco[which(data2$Banco=="Caixa-Cyber")], y = data2$Gastos[which(data2$Banco=="Caixa-Cyber")]+add, label =paste(data2$Gastos[which(data2$Banco=="Caixa-Cyber")] %>% round(2),"%"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
+    annotate("text", x = data2$Banco[which(data2$Banco=="CecaBank")], y = data2$Gastos[which(data2$Banco=="CecaBank")]+add, label =paste(data2$Gastos[which(data2$Banco=="CecaBank")] %>% round(2),"%"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
+    annotate("text", x = data2$Banco[which(data2$Banco=="Santander")], y = data2$Gastos[which(data2$Banco=="Santander")]+add, label =paste(data2$Gastos[which(data2$Banco=="Santander")] %>% round(2),"%"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
+    annotate("text", x = data2$Banco[which(data2$Banco=="CajaRural")], y = data2$Gastos[which(data2$Banco=="CajaRural")]+add, label =paste(data2$Gastos[which(data2$Banco=="CajaRural")] %>% round(2),"%"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
+    annotate("text", x = data2$Banco[which(data2$Banco=="Caixa-Addon")], y = data2$Gastos[which(data2$Banco=="Caixa-Addon")]+add, label =paste(data2$Gastos[which(data2$Banco=="Caixa-Addon")] %>% round(2),"%"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
+    annotate("text", x = data2$Banco[which(data2$Banco=="PayPlug")], y = data2$Gastos[which(data2$Banco=="PayPlug")]+add, label =paste(data2$Gastos[which(data2$Banco=="PayPlug")] %>% round(2),"%"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
+    annotate("text", x = data2$Banco[which(data2$Banco=="PayPlug-Prenium")], y = data2$Gastos[which(data2$Banco=="PayPlug-Prenium")]+add, label =paste(data2$Gastos[which(data2$Banco=="PayPlug-Prenium")] %>% round(2),"%"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )
+    
+  ggplotly(p2)
+    
+}
+```
+
+```{r echo=FALSE,fig.width=8,fig.height=4 }
+
+# Moyenne annuel et pourcentage
+Mes1=c(5,3,1,0,3,1,1,1,50)
+Mes2=c(5,3,2,0,3,1,1,1,75)
+Mes3=c(6,2,2,0,3,1,0,2,100)
+Mes4=c(6,2,3,0,3,0,2,2,125)
+Mes5=c(5,2,2,0,3,1,1,3,150)
+Mes6=c(6,3,4,0,3,0,1,3,175)
+Mes7=c(6,6,5,0,3,2,3,3,195)
+Mes8=c(5,5,4,0,3,1,2,4,215)
+Mes9=c(6,5,6,0,3,1,2,4,230)
+Mes10=c(5,5,6,0,3,2,4,4,260)
+Mes11=c(5,6,6,0,3,1,3,5,280)
+Mes12=c(6,6,6,0,3,2,4,5,300)
+Mes13=c(11,9,7,0,6,3,4,5,320)
+Mes14=c(11,8,7,0,6,3,5,5,340)
+Mes15=c(11,8,8,0,6,3,4,6,360)
+Mes16=c(12,9,9,0,6,2,5,6,380)
+MEST=c(Mes1,Mes2,Mes3,Mes4,Mes5,Mes6,Mes7,Mes8,Mes9,Mes10,Mes11,Mes12,Mes13,Mes14,Mes15,Mes16)
+
+funcalcul2= function(a,b,c,ajout){
+  gastosA=c(0,0,0,0,0)
+  
+  
+  
+  for (i in a:b){
+    
+    gastosA= gastosA+funC2(c(MEST[9*(i-1)+1],MEST[9*(i-1)+2],MEST[9*(i-1)+3],MEST[9*(i-1)+4],MEST[9*(i-1)+5],MEST[9*(i-1)+6],MEST[9*(i-1)+7],MEST[9*(i-1)+8],MEST[9*(i-1)+9]),"primer",20)
+    
+    
+    
+    
+  }
+  pourcentageA=100*c(gastosA[1]/gastosA[5],gastosA[2]/gastosA[5],gastosA[3]/gastosA[5],gastosA[4]/gastosA[5])
+
+  
+  funZizp(c("PayPlug","CecaBank","Caixa-Addon","Santander"),pourcentageA,gastosA[5],c,ajout)
+  
+}
+funcalcul2(1,4, 0.2,"2019")
+
+
+```
+
+```{r echo=FALSE,fig.width=8,fig.height=4 }
+
+# Moyenne annuel et pourcentage
+
+funcalcul3= function(a,b,c,ajout){
+  gastosA=c(0,0,0,0,0)
+  
+  
+  
+  for (i in a:b){
+    
+    gastosA= gastosA+funC2(c(MEST[9*(i-1)+1],MEST[9*(i-1)+2],MEST[9*(i-1)+3],MEST[9*(i-1)+4],MEST[9*(i-1)+5],MEST[9*(i-1)+6],MEST[9*(i-1)+7],MEST[9*(i-1)+8],MEST[9*(i-1)+9]),"primer",20)
+    
+    
+    
+    
+  }
+  pourcentageA=100*c(gastosA[1]/gastosA[5],gastosA[2]/gastosA[5],gastosA[3]/gastosA[5],gastosA[4]/gastosA[5])
+
+  funZiz(c("PayPlug","CecaBank","Caixa-Addon","Santander"),gastosA[1:4],gastosA[5],c,ajout)
+  
+}
+funcalcul3(1,4,50,"2019")
+
+
+```
+
+### Estimacion para el ano 2020
+
+
+```{r echo=FALSE,fig.width=8,fig.height=4 }
+
+funcalcul2(5,16,0.2,"2020")
+
+
+```
+
+```{r echo=FALSE,fig.width=8,fig.height=4 }
+
+funcalcul3(5,16,300,"2020")
+
+
+```
+
+
+
+
 
 Con todas esas herramientas de comparación económicas, hemos elegido a 2 proveedores. Sin embargo, no podíamos elegir el banco BBVA porque no obtuvimos ninguna respuesta de ellos en cuanto a los precios reales.
+
 Además, no hemos eligido Caja Rural o la solucion CyberPack de Caixa porque son TPV  muy limitados.
 
 Así, hemos elegido la Caixa con su solución Addon Payment y el banco Santander con la tecnología  Redsys.
 
 
-### Los gastos durante el primer ano para Santander y la Caixa.
-```{r echo=FALSE}
+### Los gastos durante 2019/2020 para Santander y la Caixa.
+```{r echo=FALSE ,fig.width=6,fig.height=4}
 # es solamente una funcion para visualizar los diferentes gastos segun Santander y Caixa durante un ano
 library(readr)
 library(ggplot2)
 library(dplyr)
 library(plotly)
 # prixS y prixC son los precios que hemos calculado con las otras funciones et que hemos utilizado para cumplir estas listas
-prixS=c(85,85,85,85,85,85,85,85,140,140,140,140)
-prixC=c(68,77,87,97,102,115,131,133,142,153,159,171)
+prixS=c(85,85,85,85,85,85,85,85,160,160,160,160,160,160,160,160)
+prixC=c(68,77,87,97,102,115,131,133,142,153,159,171,208,215,222,234)
+
+
+prixP=c(73,80,87,96,101,111,127,126,134,143,148,159,192,197,203,214)
 
 totalSan=0
 totalCaixa=0
@@ -605,10 +929,11 @@ for ( i in 1:12){
   totalCaixa=totalCaixa+prixC[i]
 }
 
-x=c(1,2,3,4,5,6,7,8,9,10,11,12)
-bS=c("Santander","Santander","Santander","Santander","Santander","Santander","Santander","Santander","Santander","Santander","Santander","Santander")
-bC=c("Caixa","Caixa","Caixa","Caixa","Caixa","Caixa","Caixa","Caixa","Caixa","Caixa","Caixa","Caixa")
-data5= data.frame("Mes"=x,"Gastos"=c(prixS,prixC), "Banco"=c(bS,bC))
+x=c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16)
+bS=c("Santander","Santander","Santander","Santander","Santander","Santander","Santander","Santander","Santander","Santander","Santander","Santander","Santander","Santander","Santander","Santander")
+bC=c("Caixa","Caixa","Caixa","Caixa","Caixa","Caixa","Caixa","Caixa","Caixa","Caixa","Caixa","Caixa","Caixa","Caixa","Caixa","Caixa")
+bP=c("PayPlug","PayPlug","PayPlug","PayPlug","PayPlug","PayPlug","PayPlug","PayPlug","PayPlug","PayPlug","PayPlug","PayPlug","PayPlug","PayPlug","PayPlug","PayPlug")
+data5= data.frame("Mes"=x,"Gastos"=c(prixS,prixC,prixP), "Banco"=c(bS,bC,bP))
 
  p5 <- data5 %>%
     ggplot(aes(x=Mes, y=Gastos, color=Banco))+
@@ -616,7 +941,7 @@ data5= data.frame("Mes"=x,"Gastos"=c(prixS,prixC), "Banco"=c(bS,bC))
     geom_line()+
     geom_point(alpha=0.7, shape=21)+
     theme_light()+
-      ggtitle("Gastos para el primer año")+
+      ggtitle("Gastos para 2019/2020")+
     theme(
       plot.title = element_text(size=13, color="#03224c"),
       axis.text.x   =element_blank(),
@@ -634,8 +959,8 @@ data5= data.frame("Mes"=x,"Gastos"=c(prixS,prixC), "Banco"=c(bS,bC))
 
 ```
 
-A lo largo de un año,los costes incurridos representan estos porcentajes del volumen total intercambiado por tarjeta de crédito.
-![""](image/wesh3.PNG)
+
+
 
 
 
