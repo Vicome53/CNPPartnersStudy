@@ -750,7 +750,7 @@ funZiz = function(banco, gastos, ChAff,add,ajout){
             
         ) +
       xlab("Nombre del banco")+ # légende des axes
-      ylab(paste("Gastos implicados para el importe total de 2020 :  ",ChAff,"€"))+
+      ylab(paste("Gastos implicados para el importe total de :  ",ChAff,"€"))+
     annotate("text", x = data2$Banco[which(data2$Banco=="BBVA")], y = data2$Gastos[which(data2$Banco=="BBVA")]+add, label =paste(data2$Gastos[which(data2$Banco=="BBVA")] %>% round(2),"€"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
     annotate("text", x = data2$Banco[which(data2$Banco=="Caixa-Cyber")], y = data2$Gastos[which(data2$Banco=="Caixa-Cyber")]+add, label =paste(data2$Gastos[which(data2$Banco=="Caixa-Cyber")] %>% round(2),"€"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
     annotate("text", x = data2$Banco[which(data2$Banco=="CecaBank")], y = data2$Gastos[which(data2$Banco=="CecaBank")]+add, label =paste(data2$Gastos[which(data2$Banco=="CecaBank")] %>% round(2),"€"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
@@ -793,7 +793,7 @@ funZizp = function(banco, gastos, ChAff,add,ajout){
             
         ) +
       xlab("Nombre del banco")+ # légende des axes
-      ylab(paste("Gastos implicados para el importe total de 2020 :  ",ChAff,"€"))+
+      ylab(paste("Gastos implicados para el importe total :  ",ChAff,"€"))+
     annotate("text", x = data2$Banco[which(data2$Banco=="BBVA")], y = data2$Gastos[which(data2$Banco=="BBVA")]+add, label =paste(data2$Gastos[which(data2$Banco=="BBVA")] %>% round(2),"%"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
     annotate("text", x = data2$Banco[which(data2$Banco=="Caixa-Cyber")], y = data2$Gastos[which(data2$Banco=="Caixa-Cyber")]+add, label =paste(data2$Gastos[which(data2$Banco=="Caixa-Cyber")] %>% round(2),"%"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
     annotate("text", x = data2$Banco[which(data2$Banco=="CecaBank")], y = data2$Gastos[which(data2$Banco=="CecaBank")]+add, label =paste(data2$Gastos[which(data2$Banco=="CecaBank")] %>% round(2),"%"),color="orange", size=4 , angle=0, fontface="bold", hjust=0 )+
@@ -916,7 +916,7 @@ library(ggplot2)
 library(dplyr)
 library(plotly)
 # prixS y prixC son los precios que hemos calculado con las otras funciones et que hemos utilizado para cumplir estas listas
-prixS=c(85,85,85,85,85,85,85,85,160,160,160,160,160,160,160,160)
+prixS=c(88.25,89.55,90.8,92.15,93.35,	94.75,	96.15,	96.95,	172.85,	174.45,	175.45,	176.6,	178.25,	179.25,	180.3,	181.45)
 prixC=c(68,77,87,97,102,115,131,133,142,153,159,171,208,215,222,234)
 
 
